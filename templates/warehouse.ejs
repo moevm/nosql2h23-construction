@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse</title>
+    <link rel = "stylesheet" type = "text/css" href = "/styles/warehouse.css">
+    <link rel="icon" href="/images/icon.png" type="image/icon type">
+
+    <!-- Part for UI Semantic -->
+    <link href = "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" rel="stylesheet" />
+    <script src= "https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+    <script src= "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+
+    <script src = "/js/rights.js"></script>
+
+    <script>
+        window.addEventListener( "pageshow", function ( event ) {
+            var historyTraversal = event.persisted || 
+                                   ( typeof window.performance != "undefined" && 
+                                        window.performance.navigation.type === 2 );
+            if ( historyTraversal ) {
+              // Handle page restore.
+              window.location.reload();
+            }
+          });
+    </script>
+</head>
+
+<body>
+
+
+    <%- include("modal_right.ejs")%>
+
+
+    <div class = "container">
+        <div class = "navigation">
+            <ul>
+                <li>
+                    <a href = "/home" id = "home">
+                        <span class = "icon"><ion-icon name="home-outline"></ion-icon></span>
+                        <span class = "title">Home</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "javascript:void(0);" id = "positions" onclick = "checkingRights('<%= role %>', this.id)">
+                        <span class = "icon"><ion-icon name="cube-outline"></ion-icon></ion-icon></span>
+                        <span class = "title">Positions</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "javascript:void(0);" id = 'invoices' onclick = "checkingRights('<%= role %>', this.id)">
+                        <span class = "icon"><ion-icon name="document-outline"></ion-icon></span>
+                        <span class = "title">Invoices</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "javascript:void(0);" id = "warehouse">
+                        <span class = "icon"><ion-icon name="checkbox-outline"></ion-icon></span>
+                        <span class = "title">Warehouse</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "javascript:void(0);" id = "statistics" onclick = "checkingRights('<%= role %>', this.id)">
+                        <span class = "icon"><ion-icon name="stats-chart-outline"></ion-icon></span>
+                        <span class = "title">Statistics</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "javascript:void(0);" id = "backup" onclick = "checkingRights('<%= role %>', this.id)">
+                        <span class = "icon"><ion-icon name="analytics-outline"></ion-icon></span>
+                        <span class = "title">Backup</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "/logout">
+                        <span class = "icon"><ion-icon name="log-out-outline"></ion-icon></span>
+                        <span class = "title">Log out</span>
+                    </a>    
+                </li>
+            </ul>
+        </div>
+    
+        <div class = "main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+
+                <div class="user">
+                    <div class = "imgBox">
+                        <img id = "image" src = "" alt = "">
+                    </div>
+
+                    <div class = "info">
+                        <div class = "username"><%= username%></div>
+                        <div class = "role_box">
+                            <div class = "role"><%= role %></div>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+
+        <div class="list">
+            <div class="positions">
+                <div class="cardHeader">
+                    <h2>List of materials</h2>
+                    
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Type</td>
+                            <td>Creation</td>
+                            <td>Author</td>
+                            <td>Content</td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                            <% for(var i=0; i < invoices.length; i++) { %>         
+                                  <tr>
+                                    <td class = "selectable"><%= invoices[i].type %></td>
+                                    <td><%= invoices[i].creation %></td>
+                                    <td><%= invoices[i].author %></td>
+                                    <td>
+                                        
+                                        <% for (var j=0; j < invoices[i].contain.length; j++){ %> 
+                                           &bull; <%= materials[invoices[i].contain[j].material_id] %>  :  <%= invoices[i].contain[j].quantity %> <br>
+                                            <% } %>
+                                        
+                                    </td>
+                                    <td>
+                                        <form id = 'formAction' action = '\validateInvoice\:id' method = "post">  
+                                            <button class = "btn_confirm" type="submit" name = "id" value = <%= invoices[i]._id %> onclick = "PerformSomething();"> Confirm</button> 
+                                        </form>
+                                    </td>
+                                    <% } %>
+                                  </tr>
+                             
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class = "toast">
+        <div class = "toast_content">
+            <i class = "fa fa-solid fa-check check"><ion-icon name="checkmark-outline"></ion-icon></i>
+                <div class = "message">
+                    <span class ="txt txt-1" id = "title">Done !</span>
+                    <span class ="txt txt-2" id = "message">The invoice has been successfully confirmed</span>
+                </div>
+        </div>
+        <i class = "fa-solid fa-xmark close"><ion-icon name="close-circle-outline"></ion-icon></i>     
+        <div class = "progress"></div>
+    </div>
+
+    </div>
+
+    <script src = "/js/warehouse.js"></script> 
+
+    <script>
+        if (`<%- notif %>` == '1'){       
+            performNotification();
+        }
+    </script>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <script>
+
+        // Function to convert binary array to Base64
+        function arrayBufferToBase64(buffer) {
+            var binary = '';
+            console.log(buffer)
+            console.log(typeof(buffer))
+
+            var bytes = new Uint8Array(buffer);
+
+            console.log(bytes)
+            
+
+            var len = bytes.byteLength;
+            
+            console.log(len)
+            for (var i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            console.log(binary)
+
+            return window.btoa(binary);
+        }
+        let data = JSON.parse(`[<%= avatar %>]`);
+
+        console.log(data.length)
+        console.log(data)
+        console.log(arrayBufferToBase64(data))
+
+        // Set src attribute of img tag with the Base64-encoded image
+         document.getElementById('image').src = 'data:image/png;base64,' + arrayBufferToBase64(data);
+        // console.log("buffer: '", arrayBufferToBase64(base64Image), "'") -->
+        
+
+
+
+    </script>
+
+</body>
+</html>

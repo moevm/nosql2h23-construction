@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Warehouse</title>
+    <link rel = "stylesheet" type = "text/css" href = "/styles/style.css">
+    <link rel="icon" href="/images/icon.png" type="image/icon type">
+
+    <!-- Part for UI Semantic -->
+    <link href = "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" rel="stylesheet" />
+    <script src= "https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+    <script src= "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+
+    <script src = "/js/rights.js"></script>
+
+
+</head>
+
+
+
+<body>
+
+    <%- include("modal_right.ejs")%>
+
+    <div class = "container">
+        <div class = "navigation">
+            <ul>
+                <li>
+                    <a id = "/home">
+                        <span class = "icon"><ion-icon name="logo-apple-ar"></ion-icon></span>
+                        <span class = "title">Smart Warehouse</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "javascript:void(0);" id = "positions" onclick = "checkingRights('<%= role %>', this.id)">
+                        <span class = "icon"><ion-icon name="cube-outline"></ion-icon></ion-icon></span>
+                        <span class = "title">Positions</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "javascript:void(0);" id = 'invoices' onclick = "checkingRights('<%= role %>', this.id)">
+                        <span class = "icon"><ion-icon name="document-outline"></ion-icon></span>
+                        <span class = "title">Invoices</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "javascript:void(0);" id = "warehouse" onclick = "checkingRights('<%= role %>', this.id)">
+                        <span class = "icon"><ion-icon name="checkbox-outline"></ion-icon></span>
+                        <span class = "title">Warehouse</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "javascript:void(0);" id = "statistics" onclick = "checkingRights('<%= role %>', this.id)">
+                        <span class = "icon"><ion-icon name="stats-chart-outline"></ion-icon></span>
+                        <span class = "title">Statistics</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "javascript:void(0);" id = "backup" onclick = "checkingRights('<%= role %>', this.id)">
+                        <span class = "icon"><ion-icon name="analytics-outline"></ion-icon></span>
+                        <span class = "title">Backup</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "/logout">
+                        <span class = "icon"><ion-icon name="log-out-outline"></ion-icon></span>
+                        <span class = "title">Log out</span>
+                    </a>    
+                </li>
+            </ul>
+        </div>
+    
+        <div class = "main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+
+                <div class="search">
+                </div>
+
+
+                <div class="user">
+                    <div class = "imgBox">
+                        <img id = "image" src = ""  alt = "">
+                    </div>
+
+                    <div class = "info">
+                        <div class = "username"><%= username%></div>
+                        <div class = "role_box">
+                            <div class = "role"><%= role %></div>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+        
+        </div>
+    </div>
+
+    <div class = "toast">
+        <div class = "toast_content">
+            <i class = "fa fa-solid fa-check check"></i>
+                <div class = "message">
+                    <span class ="txt txt-1">Success</span>
+                    <span class ="txt txt-2">Your data has been saved in our database</span>
+                </div>
+        </div>
+        <i class = "fa-solid fa-xmark close"></i>     
+        <div class = "progress"></div>
+    </div>
+
+    </div>
+
+
+    <!-- <script>$('.ui.basic.modal').modal('show');</script> -->
+    <script src = "/js/main.js"></script> 
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <script>
+
+        // Function to convert binary array to Base64
+        function arrayBufferToBase64(buffer) {
+            var binary = '';
+            console.log(buffer)
+            console.log(typeof(buffer))
+
+            var bytes = new Uint8Array(buffer);
+
+            console.log(bytes)
+            
+
+            var len = bytes.byteLength;
+            
+            console.log(len)
+            for (var i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            console.log(binary)
+
+            return window.btoa(binary);
+        }
+        let data = JSON.parse(`[<%= avatar %>]`);
+
+        console.log(data.length)
+        console.log(data)
+        console.log(arrayBufferToBase64(data))
+
+        // Set src attribute of img tag with the Base64-encoded image
+        document.getElementById('image').src = 'data:image/png;base64,' + arrayBufferToBase64(data);
+        // console.log("buffer: '", arrayBufferToBase64(base64Image), "'") -->
+        
+
+
+
+    </script>
+
+</body>
+</html>

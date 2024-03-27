@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoices</title>
+    <link rel = "stylesheet" type = "text/css" href = "/styles/backup.css">
+    <link rel="icon" href="/images/icon.png" type="image/icon type">
+
+    <!-- Part for UI Semantic -->
+    <link href = "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" rel="stylesheet" />
+    <script src= "https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+    <script src= "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+</head>
+
+<body>
+    
+
+    <div class="overlay hidden">
+    </div>
+
+
+    <div class = "container">
+        <div class = "navigation">
+            <ul>
+                <li>
+                    <a href = "/home">
+                        <span class = "icon"><ion-icon name="home-outline"></ion-icon></span>
+                        <span class = "title">Home</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "/positions">
+                        <span class = "icon"><ion-icon name="cube-outline"></ion-icon></ion-icon></span>
+                        <span class = "title">Positions</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "/invoices">
+                        <span class = "icon"><ion-icon name="document-outline"></ion-icon></span>
+                        <span class = "title">Invoices</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "/warehouse">
+                        <span class = "icon"><ion-icon name="checkbox-outline"></ion-icon></span>
+                        <span class = "title">Warehouse</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "/statistics">
+                        <span class = "icon"><ion-icon name="stats-chart-outline"></ion-icon></span>
+                        <span class = "title">Statistics</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "#">
+                        <span class = "icon"><ion-icon name="analytics-outline"></ion-icon></span>
+                        <span class = "title">Backup</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "/logout">
+                        <span class = "icon"><ion-icon name="log-out-outline"></ion-icon></span>
+                        <span class = "title">Log out</span>
+                    </a>    
+                </li>
+            </ul>
+        </div>
+    
+        <div class = "main">    
+
+            <div class = "modal_container">
+                <section class = "modal hidden" style="text-align: center;"> 
+                    <div class = "flex">
+                        <i class = "fa-solid fa-xmark close"><ion-icon name="close-circle-outline"></ion-icon></i>
+                    </div>
+                    <div class = "flex-logo">
+                        <img width="100" height="100" src="https://img.icons8.com/ios-filled/50/database-export.png" alt="database-export"/>
+                    </div>
+                    <div class = "title" style="margin-bottom: 20px;">
+                        <h3>Import data</h3>
+                        <p>
+                            Choose the file (.json) to import into the database.
+                        </p>
+                    </div>    
+   
+                <form action = "/salo" method = "post">
+                </form>
+            </section>
+            </div>
+
+
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+
+                <div class="user">
+                    <div class = "imgBox">
+                        <img id = "image" src = "" alt = "">
+                    </div>
+
+                    <div class = "info">
+                        <div class = "username"><%= username%></div>
+                        <div class = "role_box">
+                            <div class = "role"><%= role %></div>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+        
+    
+        <div class = "cardBox">
+            <div id = "enter" class = "card" onclick="action(this);">
+                <div>
+                    <div class = "numbers">Import data</div>
+                    <div class = "cardName">Select this mode to import data from a selected json file.</div>
+                </div>
+        
+                <div class = "iconBx">
+                    <ion-icon name="enter-outline"></ion-icon>
+                </div>
+            </div>
+
+            <div id = "exit" class = "card" onclick="action(this);">
+                <div>
+                    <div class = "numbers">Export</div>
+                    <div class = "cardName">Select this mode to export data of your collections into a json file.</div>
+                   
+                </div>
+
+                <div class = "iconBx">
+                    <ion-icon name="exit-outline"></ion-icon>
+                </div>
+            </div>
+        </div>
+
+
+    <div class = "toast">
+        <div class = "toast_content">
+            <i class = "fa fa-solid fa-check check"><ion-icon name="alert-circle-outline"></ion-icon></i>
+                <div class = "message">
+                    <span class ="txt txt-1" id = "title">Done !</span>
+                    <span class ="txt txt-2" id = "message">The data has been successfully imported into the database</span>
+                </div>
+        </div>
+        <i class = "fa-solid fa-xmark close"><ion-icon name="close-circle-outline"></ion-icon></i>     
+        <div class = "progress"></div>
+    </div>
+
+    <script>
+
+        // Function to convert binary array to Base64
+        function arrayBufferToBase64(buffer) {
+            var binary = '';
+            console.log(buffer)
+            console.log(typeof(buffer))
+
+            var bytes = new Uint8Array(buffer);
+
+            console.log(bytes)
+            
+
+            var len = bytes.byteLength;
+            
+            console.log(len)
+            for (var i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            console.log(binary)
+
+            return window.btoa(binary);
+        }
+        let data = JSON.parse(`[<%= avatar %>]`);
+
+        console.log(data.length)
+        console.log(data)
+        console.log(arrayBufferToBase64(data))
+
+        // Set src attribute of img tag with the Base64-encoded image
+        document.getElementById('image').src = 'data:image/png;base64,' + arrayBufferToBase64(data);
+        // console.log("buffer: '", arrayBufferToBase64(base64Image), "'") -->
+
+    </script>
+
+    <script src = "/js/backup.js"></script> 
+
+
+
+
+    
+    <script>
+        if ([`1`, `2`].includes(`<%- notif %>`)){ console.log(`<%- notif %>`); performBackupNotification(`<%- notif %>`);}
+    </script>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+
+</body>
+</html>

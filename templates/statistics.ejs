@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics</title>
+    <link rel = "stylesheet" type = "text/css" href = "/styles/statistics.css">
+    <link rel="icon" href="/images/icon.png" type="image/icon type">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script src="https://unpkg.com/chartjs-plugin-colorschemes"></script>
+
+    <!-- Part for UI Semantic -->
+    <link href = "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" rel="stylesheet" />
+    <script src= "https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+    <script src= "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+
+    <script>
+        window.addEventListener( "pageshow", function ( event ) {
+            var historyTraversal = event.persisted || 
+                                   ( typeof window.performance != "undefined" && 
+                                        window.performance.navigation.type === 2 );
+            if ( historyTraversal ) {
+              // Handle page restore.
+              window.location.reload();
+            }
+          });
+    </script>
+</head>
+
+<body>
+    <div class = "container">
+        <div class = "navigation">
+            <ul>
+                <li>
+                    <a href = "/home">
+                        <span class = "icon"><ion-icon name="home-outline"></ion-icon></span>
+                        <span class = "title">Home</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "/positions">
+                        <span class = "icon"><ion-icon name="cube-outline"></ion-icon></ion-icon></span>
+                        <span class = "title">Positions</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = '/invoices'>
+                        <span class = "icon"><ion-icon name="document-outline"></ion-icon></span>
+                        <span class = "title">Invoices</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "/warehouse">
+                        <span class = "icon"><ion-icon name="checkbox-outline"></ion-icon></span>
+                        <span class = "title">Warehouse</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "/statistics">
+                        <span class = "icon"><ion-icon name="stats-chart-outline"></ion-icon></span>
+                        <span class = "title">Statistics</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "/backup">
+                        <span class = "icon"><ion-icon name="analytics-outline"></ion-icon></span>
+                        <span class = "title">Backup</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "/logout">
+                        <span class = "icon"><ion-icon name="log-out-outline"></ion-icon></span>
+                        <span class = "title">Log out</span>
+                    </a>    
+                </li>
+            </ul>
+        </div>
+    
+        <div class = "main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+
+                <div class="search">
+                    <h2 style="text-align: center;">Statistics</h2>
+                </div>
+
+
+                <div class="user">
+                    <div class = "imgBox">
+                        <img id = "image" src = "/images/avatar.png" alt = "">
+                    </div>
+
+                    <div class = "info">
+                        <div class = "username"><%= username%></div>
+                        <div class = "role_box">
+                            <div class = "role"><%= role %></div>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+        
+
+        <!-- Add charts -->
+        <h2>Name : <%= material %></h2>
+        <div class = "graphBox">
+            <div class = "box">
+                <div class="cardHeader" style="text-align: center;">
+                    <h2>Annual consumption</h2>
+                </div>
+                <canvas id="myChart"></canvas>
+            </div>
+
+            <div class = "box">
+                <div class="cardHeader" style="text-align: center;">
+                    <h2>Worker consumption</h2>
+                </div>
+                <canvas id="myDonut"></canvas>
+            </div>
+
+            <div class = "box-statistics">
+                <div class="cardHeader" style="text-align: center;">
+                    <h2>Historic consumption</h2>
+                </div>
+                <div class="list-statistics">
+                    <div class="positions-statistics">
+                        <table class = "table-statistics">
+                            <thead class = "thead-statistics">
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Role</td>
+                                    <td>Date</td>
+                                </tr>
+                            </thead>
+        
+                            <tbody class = "tbody-statistics">
+                                    <% for(var i=0; i < historic.length; i++) { %>         
+                                          <tr>
+                                            <td class = "selectable"><%= historic[i].person %></td>
+                                            <td><%= historic[i].role %></td>
+                                            <td><%= moment(historic[i].date).format('DD-MM-YYYY') %></td>
+                                          </tr>
+                                     <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="list">
+            <div class="cardHeader">
+                <h2>Materials</h2>
+            </div>
+            <div class="positions">
+               
+
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Product</td>
+                            <td>Type</td>
+                            <td>Positions</td>
+                            <td>Stock</td>
+                            <td>Unit</td>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                            <% for(var i=0; i < materials.length; i++) { %>         
+                                  <tr class = "selectable" style = "cursor: pointer;" onclick = "window.location = `/statistics?id=${'<%= materials[i]._id %>'}`">
+                                    <td class = "selectable">
+                                             <%= materials[i].name %> 
+                                         </td>
+                                    <td><%= materials[i].type %></td>
+                                    <td><%= materials[i].quantity[0] %></td>
+                                    <td><%= materials[i].quantity[1] %></td>
+                                    <td><%= materials[i].unity %></td>
+                                  </tr>
+                             <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+        // Function to convert binary array to Base64
+        function arrayBufferToBase64(buffer) {
+            var binary = '';
+            console.log(buffer)
+            console.log(typeof(buffer))
+
+            var bytes = new Uint8Array(buffer);
+
+            console.log(bytes)
+            
+
+            var len = bytes.byteLength;
+            
+            console.log(len)
+            for (var i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            console.log(binary)
+
+            return window.btoa(binary);
+        }
+        let dataI = JSON.parse(`[<%= avatar %>]`);
+
+        console.log(dataI.length)
+        console.log(dataI)
+        console.log(arrayBufferToBase64(dataI))
+
+        // Set src attribute of img tag with the Base64-encoded image
+        document.getElementById('image').src = 'data:image/png;base64,' + arrayBufferToBase64(dataI);
+        // console.log("buffer: '", arrayBufferToBase64(base64Image), "'") -->
+        
+
+
+
+    </script>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+
+    </div>
+
+    
+
+
+
+    <script>
+        
+        let donut = '<%- new_data %>';
+
+        const data_ejs = JSON.parse("[<%- data %>]");
+        const new_data_ejs = JSON.parse(donut)
+
+        console.log(new_data_ejs)
+    </script>
+
+    <script src = "/js/statistics.js"></script> 
+
+
+</body>
+</html>

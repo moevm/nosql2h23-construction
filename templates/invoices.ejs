@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoices</title>
+    <link rel = "stylesheet" type = "text/css" href = "/styles/invoices.css">
+    <link rel="icon" href="/images/icon.png" type="image/icon type">
+
+        <!-- Part for UI Semantic -->
+        <link href = "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" rel="stylesheet" />
+        <script src= "https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+        <script src= "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+    
+        <script src = "/js/rights.js"></script>
+
+        <script>
+            window.addEventListener( "pageshow", function ( event ) {
+                var historyTraversal = event.persisted || 
+                                       ( typeof window.performance != "undefined" && 
+                                            window.performance.navigation.type === 2 );
+                if ( historyTraversal ) {
+                  // Handle page restore.
+                  window.location.reload();
+                }
+              });
+        </script>
+</head>
+
+<body>
+    
+    <%- include("modal_right.ejs")%>
+
+    <div class="overlay hidden"></div>
+
+
+    <div class = "container">
+        <div class = "navigation">
+            <ul>
+                <li>
+                    <a href = "/home" id = "home">
+                        <span class = "icon"><ion-icon name="home-outline"></ion-icon></span>
+                        <span class = "title">Home</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "javascript:void(0);" id = "positions" onclick = "checkingRights('<%= role %>', this.id)">
+                        <span class = "icon"><ion-icon name="cube-outline"></ion-icon></ion-icon></span>
+                        <span class = "title">Positions</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "javascript:void(0);" id = 'invoices'>
+                        <span class = "icon"><ion-icon name="document-outline"></ion-icon></span>
+                        <span class = "title">Invoices</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "javascript:void(0);" id = "warehouse" onclick = "checkingRights('<%= role %>', this.id)">
+                        <span class = "icon"><ion-icon name="checkbox-outline"></ion-icon></span>
+                        <span class = "title">Warehouse</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "javascript:void(0);" id = "statistics" onclick = "checkingRights('<%= role %>', this.id)">
+                        <span class = "icon"><ion-icon name="stats-chart-outline"></ion-icon></span>
+                        <span class = "title">Statistics</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "javascript:void(0);" id = "backup" onclick = "checkingRights('<%= role %>', this.id)">
+                        <span class = "icon"><ion-icon name="analytics-outline"></ion-icon></span>
+                        <span class = "title">Backup</span>
+                    </a>    
+                </li>
+
+                <li>
+                    <a href = "/logout">
+                        <span class = "icon"><ion-icon name="log-out-outline"></ion-icon></span>
+                        <span class = "title">Log out</span>
+                    </a>    
+                </li>
+            </ul>
+        </div>
+    
+        <div class = "main">    
+                <section class = "modal_newmat hidden"> 
+                    <div class = "flex">
+                        <i class = "fa-solid fa-xmark close"><ion-icon name="close-circle-outline"></ion-icon></i>
+                    </div>
+                    <div>
+                        <h3>New Material</h3>
+                        <p>
+                            Fill the form with the informations of the new material you want to add to the database. 
+                        </p>
+                    </div>
+                    
+                    <form action = "/createMaterial" method = "post">
+                        <h4>Name</h4>
+                        <input type="text" name="name" placeholder="Give a name to the material" required="true"/>
+                        <h4>Type</h4>
+                        <input type="text" name="type" placeholder="Type of a material (construction, painting, security, ...)" required="true"/>
+                        <h4>Unit</h4>
+                        <input type="text" name="unit" placeholder="Unit of the material (tons, meters, liters, ...)" required="true"/>
+                        <h4>Description</h4>
+                        <input type="text" name="description" placeholder="Give a small description to the material" required="true"/>
+                    
+                        <div class="container_modal_btn">
+                            <button type = "submit" class="btn-modal-submit">Create material</button>
+                        </div>
+                    </form>
+                    
+                </section>
+
+
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+
+                <div class="search">
+                    <label>
+                        <h2 style="text-align: center; color: var(--blue);">Invoices</h2>
+                    </label>
+                </div>
+
+
+                <div class="user">
+                    <div class = "imgBox">
+                        <img id = "image" src = "/images/avatar.png" alt = "">
+                    </div>
+
+                    <div class = "info">
+                        <div class = "username"><%= username %></div>
+                        <div class = "role_box">
+                            <div class = "role"><%= role %></div>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+        
+    
+        <div class = "cardBox">
+            <div id = "enter" class = "card" onclick="action(this);">
+                <div>
+                    <div class = "numbers">Entering</div>
+                    <div class = "cardName">Select this mode to create invoice for all the materials that are coming from outside to the warehouse.</div>
+                </div>
+        
+                <div class = "iconBx">
+                    <ion-icon name="enter-outline"></ion-icon>
+                </div>
+            </div>
+
+            <div id = "exit" class = "card" onclick="action(this);">
+                <div>
+                    <div class = "numbers">Exiting</div>
+                    <div class = "cardName">Select this mode to create invoice for all the materials that are going from the warehouse to positions.</div>
+                </div>
+
+                <div class = "iconBx">
+                    <ion-icon name="exit-outline"></ion-icon>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="list">
+            <div class="cardHeader">
+                <h2>List of invoices</h2>
+            </div>
+            <div class="positions">
+
+
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Product</td>
+                            <td>Type</td>
+                            <td>Positions</td>
+                            <td>Stock</td>
+                            <td>Unit</td>
+                            <td>Description</td>
+                            <td>Quantity</td>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                            <% for(var i=0; i < materials.length; i++) { %>         
+                                  <tr>
+                                    <td class = "selectable"><%= materials[i].name %></td>
+                                    <td><%= materials[i].type %></td>
+                                    <td><%= materials[i].quantity[0] %></td>
+                                    <td><%= materials[i].quantity[1] %></td>
+                                    <td><%= materials[i].unity %></td>
+                                    <td><%= materials[i].description %></td>
+                                    <td>
+                                        <div class = "wrapper_<%=i%>" id = <%= materials[i]._id %>>
+                                            <span class = "minus" name = 'minus_<%=i%>' onclick="decrementValue(this)">-</span>
+                                            <span class = "num" name = 'num_<%=i%>'>0</span>
+                                            <span class = "plus" name = 'plus_<%=i%>' onclick = "incrementValue(this, '<%= materials[i].quantity[1]%>')">+</span>    
+                                        </div>
+                                    </td>
+                                  </tr>
+                             <% } %>
+                    </tbody>
+                </table>
+                </div>
+                <div class = "btn">
+                    <div class = "button_submit">
+                        <button class = "btn_gen_inv" onclick = "countValues(); postInvoices();">Generate invoice</a>
+                    </div>
+    
+                    <div class = "button_create_material">
+                        <button class = "btn_new_mat" style="visibility: hidden;">New material</a>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+
+    <div class = "toast">
+        <div class = "toast_content">
+            <i class = "fa fa-solid fa-check check"><ion-icon name="alert-circle-outline"></ion-icon></i>
+                <div class = "message">
+                    <span class ="txt txt-1" id = "title">Done !</span>
+                    <span class ="txt txt-2" id = "message">The invoice has been successfully added to the database</span>
+                </div>
+        </div>
+        <i class = "fa-solid fa-xmark close"><ion-icon name="close-circle-outline"></ion-icon></i>     
+        <div class = "progress"></div>
+    </div>
+
+    <script src = "/js/invoices.js"></script> 
+
+    <script>
+        if ('<%= notif %>' == 1){
+            performNewMaterialNotification();
+        }
+    </script>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <script>
+
+        // Function to convert binary array to Base64
+        function arrayBufferToBase64(buffer) {
+            var binary = '';
+            console.log(buffer)
+            console.log(typeof(buffer))
+
+            var bytes = new Uint8Array(buffer);
+
+            console.log(bytes)
+            
+
+            var len = bytes.byteLength;
+            
+            console.log(len)
+            for (var i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            console.log(binary)
+
+            return window.btoa(binary);
+        }
+        let data = JSON.parse(`[<%= avatar %>]`);
+
+        console.log(data.length)
+        console.log(data)
+        console.log(arrayBufferToBase64(data))
+
+        // Set src attribute of img tag with the Base64-encoded image
+         document.getElementById('image').src = 'data:image/png;base64,' + arrayBufferToBase64(data);
+        // console.log("buffer: '", arrayBufferToBase64(base64Image), "'") -->
+        
+
+
+
+    </script>
+
+</body>
+</html>

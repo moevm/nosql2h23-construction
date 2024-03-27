@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <style>
+
+        
+        * {
+        font-family: "Ubuntu", sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: #ddd;
+            overflow: hidden;
+        }
+        
+        .toast{
+            position: absolute;
+            top: 25px;
+            right: 30px;
+            border-radius: 10px;
+            background: #fff;
+            padding: 20px 25px 20px 25px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            border-left: 6px solid #f32695;
+            transition: all 0.5s ease;
+            transform: translateX(calc(100% + 30px)); 
+            overflow: hidden;
+            
+        }
+
+        .toast.active{
+            transform: translateX(0%);
+        }
+
+
+
+        .toast_content {
+            display: flex;
+            align-items: center;
+        }
+
+        .toast_content .check{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 35px;
+            width: 35px;
+            background: #f32695;
+            color: #fff;
+            font-size: 20px;
+            border-radius: 50%;
+        }
+
+        .toast_content .message {
+            display: flex;
+            flex-direction: column;
+            margin: 0 20px;
+        }
+
+        .message .txt{
+            font-size: 20px;
+            font-weight: 400;
+            color: grey;
+        }
+
+        .message .txt-1{
+            font-weight: 600;
+            color: #333 
+        }
+
+        .toast .close{
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            padding: 5px;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .toast .close:hover{
+            opacity: 1.0;
+        }
+
+        .toast .progress{
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 100%;
+            background: #ddd;
+        }
+
+        .toast .progress:before{
+            content: "";
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            height: 100%;
+            width: 100%;
+            background: #f32695;
+        }
+
+        .progress.active::before{
+            animation: progress 5s linear forwards;
+        }
+
+        @keyframes progress{
+            100%{
+                right: 100%;
+            }
+        }
+
+        button{
+            padding: 10px;
+            font-size: 20px;
+            outline: none;
+            border: none;
+            background: #f32695;
+            color: #fff;
+            border-radius: 0.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            margin: 0.2rem;
+        }
+
+        button:hover{
+            background: #f32695;
+        }
+
+    </style>
+
+    <link rel = "stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"/>
+
+
+
+<body>
+    <div class = "toast">
+        <div class = "toast_content">
+            <i class = "fa fa-solid fa-check check"></i>
+                <div class = "message">
+                    <span class ="txt txt-1">Success</span>
+                    <span class ="txt txt-2">Your data has been saved in our database</span>
+                </div>
+        </div>
+        <i class = "fa-solid fa-xmark close"></i>     
+        <div class = "progress"></div>
+    </div>
+    <button type="button">Primary</button>
+    <script>
+        const btnEl = document.querySelector('button');
+        const toastEl = document.querySelector('.toast');
+        const closeEl = document.querySelector('.close');
+        const progressEl = document.querySelector('.progress');
+        
+        btnEl.addEventListener('click', () => {
+            toastEl.classList.add('active');
+            progressEl.classList.add('active');
+        })
+
+        setTimeout(function(){
+            toastEl.classList.remove('active')
+        }, 5000);
+
+        closeEl.addEventListener('click', ()=>{
+            toastEl.classList.remove('active');
+        })
+
+    </script>   
+</body>
+</html>

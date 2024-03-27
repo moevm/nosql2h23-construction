@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/styles/login.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="icon" href="/images/icon.png" type="image/icon type">
+</head>
+<body>
+    
+<script>
+    if('<%= error %>' === '1'){
+        document.head.appendChild(document.createElement("style")).innerHTML = '.input-box input{ animation-name: shake, glow-red; animation-duration: 0.7s, 0.35s; animation-iteration-count: 1, 2;}';
+    }
+</script>
+
+<div class="wrapper">
+    <h1>Login</h1>
+    <form action = "/login" method="post">
+        <div class ="input-box">
+            <input type="text" name = "log" placeholder="Username" required>
+            <i class='bx bxs-user'></i>
+        </div>
+        <div class ="input-box">
+            <input type="text" name = "password" placeholder="Password" required>
+            <i class='bx bxs-lock-alt'></i>
+        </div>
+        
+        <button type = "submit" class ="btn">Login</button>
+    </form>
+
+    <div class = "register-link">
+        <p> Don't have an account? <a href = "/signup">Register</a></p>
+    </div>
+</div>
+</body>
+</html>
