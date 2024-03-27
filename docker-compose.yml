@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  mongo_db:
+    container_name: mongo
+    image: mongo:7.0.2
+    restart: unless-stopped
+    volumes:
+      - ./mongo_db:/data/db
+
+  app:
+    container_name: app
+    build: .
+    ports:
+      - 3000:3000
+    image: node:alpine
+    environment:
+      PORT: 3000
+      MONGODB_URI: mongodb://mongo_db:27017
+      DB_NAME: smart-warehouse
+    command: sh -c "node init.js && node server.js"
+
+
+volumes:
+  mongo_db: {}
